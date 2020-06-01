@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class SpaceShipController : MonoBehaviour
 {
+    public float spaceShipHealth = 10f;
+
     public Rigidbody playerRigidBody;
     private float verticalInput;
 
-    [Range(10f, 15f)]
+    [Range(10f, 25f)]
     public float playerSpeed;
 
     private Vector3 target;
@@ -18,9 +20,9 @@ public class SpaceShipController : MonoBehaviour
     {
         target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
-        Vector3 difference = target - transform.GetChild(0).position;
+        Vector3 difference = target - transform.position;
         float rotationZ = Mathf.Atan2(target.y, target.x) * Mathf.Rad2Deg;
-        transform.GetChild(0).rotation = Quaternion.Euler(0, 0, rotationZ);
+        transform.rotation = Quaternion.Euler(0, 0, rotationZ);
 
         SpaceShipMovement();
         CheckPosition();
@@ -29,21 +31,18 @@ public class SpaceShipController : MonoBehaviour
         {
             BulletFire();
         }
-
     }
     void SpaceShipMovement()
     {
         verticalInput = Input.GetAxis("Vertical");
-        if (verticalInput > 0 )
+        if (verticalInput > 0)
         {
-            Vector2 mousePointerPosition = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-            playerRigidBody.AddForce(mousePointerPosition * playerSpeed);
+            playerRigidBody.AddForce(new Vector3(target.x, target.y, 0) * playerSpeed);
         }
     }
 
     private void CheckPosition()
     {
-
         float sceneWidth = Camera.main.orthographicSize * 2 * Camera.main.aspect;
         float sceneHeight = Camera.main.orthographicSize * 2;
 
@@ -52,29 +51,40 @@ public class SpaceShipController : MonoBehaviour
         float sceneTopEdge = sceneHeight / 2;
         float sceneBottomEdge = sceneTopEdge * -1;
 
-        if (transform.GetChild(0).position.x > sceneRightEdge)
+        if (transform.position.x > sceneRightEdge)
         {
-            transform.GetChild(0).position = new Vector2(sceneLeftEdge, transform.GetChild(0).position.y);
+            transform.position = new Vector3(sceneLeftEdge, transform.position.y, 0);
         }
-        if (transform.GetChild(0).position.x < sceneLeftEdge)
+        if (transform.position.x < sceneLeftEdge)
         {
-            transform.GetChild(0).position = new Vector2(sceneRightEdge, transform.GetChild(0).GetChild(0).position.y);
+            transform.position = new Vector3(sceneRightEdge, transform.position.y, 0);
         }
-        if (transform.GetChild(0).position.y > sceneTopEdge)
+        if (transform.position.y > sceneTopEdge)
         {
-            transform.GetChild(0).position = new Vector2(transform.GetChild(0).position.x, sceneBottomEdge);
+            transform.position = new Vector3(transform.position.x, sceneBottomEdge, 0);
         }
-        if (transform.GetChild(0).position.y < sceneBottomEdge)
+        if (transform.position.y < sceneBottomEdge)
         {
-            transform.GetChild(0).position = new Vector2(transform.GetChild(0).position.x, sceneTopEdge);
+            transform.position = new Vector3(transform.position.x, sceneTopEdge, 0);
         }
 
     }
 
     void BulletFire()
     {
-        GameObject bulletClone = Instantiate(bulletObject, new Vector2(bulletObject.transform.position.x, bulletObject.transform.position.y), bulletObject.transform.rotation);
-        bulletClone.transform.localScale = new Vector3(0.1f, .5f, 0.1f);
+        GameObject bulletClone = Instantiate(bulletObject, new Vector3(bulletObject.transform.position.x, bulletObject.transform.position.y, 0f), bulletObject.transform.rotation);
+        bulletClone.transform.localScale = new Vector3(0.3f, 0.7f, 1.5f);
         bulletClone.SetActive(true);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "Aestroid")
+        {
+            if (spaceShipHealth <= 0)
+            {
+                
+            }
+        }
     }
 }

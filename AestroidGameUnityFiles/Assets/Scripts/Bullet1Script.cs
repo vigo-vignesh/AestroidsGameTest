@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Bullet1Script : MonoBehaviour
 {
+    public int bulletPower = 5;
+
     [SerializeField]
     [Range(0, 100)]
     private float bulletSpeed;
-    [SerializeField][Range(0,1)]
+    [SerializeField]
+    [Range(0, 1)]
     private float bulletDestroyTime;
     private void Start()
     {
