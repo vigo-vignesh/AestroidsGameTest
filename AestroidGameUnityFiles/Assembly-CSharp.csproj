@@ -60,6 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\AestroidsManager.cs" />
+    <Compile Include="Assets\Scripts\Bullet1Script.cs" />
     <Compile Include="Assets\Scripts\SpaceShipController.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/vicky/OneDrive/Documents/GitHub/AestroidsGameTest/AestroidGameUnityFiles/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
