@@ -9,3 +9,4 @@ Unity : 2018.4.22f1
 2. Project folder Set up
 3. Trello concept board Link : https://trello.com/invite/b/u7zQxWIb/66c2703f15abec88215846a848b66b2f/aestroidstask
 4. Git Link : https://github.com/vigo-vignesh/AestroidsGameTest.git
+5. Added movement and screen wrap effect to the spaceship
