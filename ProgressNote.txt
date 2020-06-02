@@ -10,3 +10,19 @@ Unity : 2018.4.22f1
 3. Trello concept board Link : https://trello.com/invite/b/u7zQxWIb/66c2703f15abec88215846a848b66b2f/aestroidstask
 4. Git Link : https://github.com/vigo-vignesh/AestroidsGameTest.git
 5. Added movement and screen wrap effect to the spaceship
+
+01/06/2020
+----------
+
+1. Generate rnadom Aestroids
+2. Smoothen the spaceship movement
+3. Facing issues with z axix lock
+4. Generate Bullets to Destroy aestroids
+
+02/06/2020
+----------
+
+1. Randomise Aestroids size and and assign power to each
+2. Health Sytem
+3. Added scores
+4. Fixed bug related to z position
