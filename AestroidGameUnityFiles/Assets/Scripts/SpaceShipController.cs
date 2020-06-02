@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SpaceShipController : MonoBehaviour
 {
-    public float spaceShipHealth = 10f;
-
     public Rigidbody playerRigidBody;
     private float verticalInput;
 
@@ -18,6 +16,14 @@ public class SpaceShipController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown("space"))
+        {
+            BulletFire();
+        }
+    }
+
+    private void FixedUpdate()
+    {
         target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
         Vector3 difference = target - transform.position;
@@ -26,12 +32,8 @@ public class SpaceShipController : MonoBehaviour
 
         SpaceShipMovement();
         CheckPosition();
-
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown("space"))
-        {
-            BulletFire();
-        }
     }
+
     void SpaceShipMovement()
     {
         verticalInput = Input.GetAxis("Vertical");
@@ -67,13 +69,12 @@ public class SpaceShipController : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, sceneTopEdge, 0);
         }
-
     }
 
     void BulletFire()
     {
         GameObject bulletClone = Instantiate(bulletObject, new Vector3(bulletObject.transform.position.x, bulletObject.transform.position.y, 0f), bulletObject.transform.rotation);
-        bulletClone.transform.localScale = new Vector3(0.3f, 0.7f, 1.5f);
+        bulletClone.transform.localScale = new Vector3(0.3f, 0.5f, 1.5f);
         bulletClone.SetActive(true);
     }
 
@@ -81,9 +82,19 @@ public class SpaceShipController : MonoBehaviour
     {
         if (collision.transform.tag == "Aestroid")
         {
-            if (spaceShipHealth <= 0)
+            GameManager.Instance.playerHealth = GameManager.Instance.playerHealth - 0.25f;
+            GameManager.Instance.healthBarImage.GetComponent<Image>().fillAmount = GameManager.Instance.playerHealth;
+            if (GameManager.Instance.playerHealth <= 0)
             {
-                
+                int playerScore = 0;
+                int.TryParse(GameManager.Instance.playerScore, out playerScore);
+
+                if (playerScore > GameManager.Instance.highScore)
+                {
+                    PlayerPrefs.SetInt("Aestroids_HighScore", playerScore);
+                }
+
+                SceneManager.LoadScene(0);
             }
         }
     }

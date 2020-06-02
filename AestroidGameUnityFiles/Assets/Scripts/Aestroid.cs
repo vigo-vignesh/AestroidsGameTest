@@ -4,35 +4,60 @@ using UnityEngine;
 
 public class Aestroid : MonoBehaviour
 {
-    public int aestroidPower = 10;
+    public int aestroidPower;
+    public int aestroidScore;
 
     [SerializeField]
-    [Range(0, 15)]
+    [Range(10, 50)]
     private int AestroidSpeed;
     [SerializeField]
     private int randomNumberX;
     [SerializeField]
     private float randomNumberY;
+    [SerializeField]
+    private float randomRotationSpeed;
 
     private void Start()
     {
         randomNumberX = Random.Range(1, 10);
         randomNumberY = Random.Range(-1f, 1f);
-
+        randomRotationSpeed = Random.Range(-50f, 50f);
         DestroyThisAestroid();
     }
-    private void Update()
+    private void FixedUpdate()
     {
-        transform.Rotate(Vector3.zero, Space.Self);
+        transform.Rotate(new Vector3(1f, randomNumberY, 0f) * randomRotationSpeed * Time.deltaTime, Space.Self);
 
         if (randomNumberX % 2 == 0)
         {
-            transform.GetComponent<Rigidbody>().AddForce(new Vector3(1f, randomNumberY, 0) * AestroidSpeed);
+            transform.GetComponent<Rigidbody>().velocity = (new Vector3(1f, randomNumberY, 0) * AestroidSpeed * 10f * Time.deltaTime);
         }
         else
         {
-            transform.GetComponent<Rigidbody>().AddForce(new Vector3(-1f, randomNumberY, 0) * AestroidSpeed);
+            transform.GetComponent<Rigidbody>().velocity = (new Vector3(-1f, randomNumberY, 0) * AestroidSpeed * 10f * Time.deltaTime );
         }
+
+
+        //if (randomNumberX % 2 == 0)
+        //{
+        //    transform.GetComponent<Rigidbody>().AddForce(new Vector3(1f, randomNumberY, 0) * AestroidSpeed);
+        //}
+        //else
+        //{
+        //    transform.GetComponent<Rigidbody>().AddForce(new Vector3(-1f, randomNumberY, 0) * AestroidSpeed);
+        //}
+
+        //if (randomNumberX % 2 == 0)
+        //{
+        //    transform.Translate(new Vector3(1f, randomNumberY, 0f) * Time.deltaTime* AestroidSpeed, Space.Self);
+        //}
+        //else
+        //{
+        //    transform.Translate(new Vector3(-1f, randomNumberY, 0f) * Time.deltaTime* AestroidSpeed, Space.Self);
+        //}
+
+
+
         CheckPosition();
     }
     void DestroyThisAestroid()
@@ -65,20 +90,29 @@ public class Aestroid : MonoBehaviour
         {
             transform.position = new Vector2(transform.position.x, sceneTopEdge);
         }
-
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log(collision.transform.name);
-        if (collision.transform.tag == "Bullet")
+        switch (collision.transform.tag)
         {
-            aestroidPower = aestroidPower - collision.transform.GetComponent<Bullet1Script>().bulletPower;
+            case "Bullet":
+                aestroidPower = aestroidPower - collision.transform.GetComponent<Bullet1Script>().bulletPower;
+                Destroy(collision.transform.gameObject);
+                if (aestroidPower <= 0)
+                {
+                    int currentScore = 0;
+                    int.TryParse(GameManager.Instance.playerScore, out currentScore);
+                    currentScore = currentScore + aestroidScore;
+                    GameManager.Instance.playerScore = currentScore.ToString();
+                }
+                break;
 
-            if (aestroidPower <= 0)
-            {
+            case "Player":
                 Destroy(this.gameObject);
-            }
+                break;
         }
+        
     }
 }

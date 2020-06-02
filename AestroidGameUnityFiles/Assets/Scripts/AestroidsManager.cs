@@ -14,22 +14,26 @@ public class AestroidsManager : MonoBehaviour
 
     void generateAestroids()
     {
-        int randomNumber = Random.Range(-25, 25);
-        float randomScale = Random.Range(0.5f, 1.5f);
-
-        if (transform.childCount <= 5)
+        for (int i = 0; i <= 4; i++)
         {
-            if (randomNumber % 2 == 0)
+            int randomNumber = Random.Range(-25, 25);
+           
+            float randomScale = Random.Range(0.5f, 1.5f);
+           
+            if (transform.childCount <= 10)
             {
-                GameObject aestroidClone = Instantiate(aestroidsType1Obj, new Vector3(-50f, randomNumber, 0), aestroidsType1Obj.transform.rotation) as GameObject;
-                aestroidClone.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
-                SetAestroidProperties(aestroidClone, randomScale);
-            }
-            else
-            {
-                GameObject aestroidClone = Instantiate(aestroidsType1Obj, new Vector3(50f, randomNumber, 0), aestroidsType1Obj.transform.rotation) as GameObject;
-                aestroidClone.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
-                SetAestroidProperties(aestroidClone, randomScale);
+                if (randomNumber % 2 == 0)
+                {
+                    GameObject aestroidClone = Instantiate(aestroidsType1Obj, new Vector3(-50f, randomNumber, 0f), aestroidsType1Obj.transform.rotation) as GameObject;
+                    aestroidClone.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
+                    SetAestroidProperties(aestroidClone, randomScale);
+                }
+                else
+                {
+                    GameObject aestroidClone = Instantiate(aestroidsType1Obj, new Vector3(50f, randomNumber, 0f), aestroidsType1Obj.transform.rotation) as GameObject;
+                    aestroidClone.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
+                    SetAestroidProperties(aestroidClone, randomScale);
+                }
             }
         }
     }
@@ -39,17 +43,20 @@ public class AestroidsManager : MonoBehaviour
         aestroidClone.transform.parent = transform;
         aestroidClone.SetActive(true);
 
-        if (randomScaleValue < -1.2f)
+        if (randomScaleValue < 0.8f)
         {
             aestroidClone.GetComponent<Aestroid>().aestroidPower = 5;
+            aestroidClone.GetComponent<Aestroid>().aestroidScore= 5;
         }
         else if (randomScaleValue > 1.2f)
         {
             aestroidClone.GetComponent<Aestroid>().aestroidPower = 15;
+            aestroidClone.GetComponent<Aestroid>().aestroidScore = 15;
         }
         else
         {
             aestroidClone.GetComponent<Aestroid>().aestroidPower = 10;
+            aestroidClone.GetComponent<Aestroid>().aestroidScore = 10;
         }
     }
 }
