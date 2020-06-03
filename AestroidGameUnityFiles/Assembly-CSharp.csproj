@@ -69,11 +69,12 @@
     <Compile Include="Assets\GraphicAssets\VFX Utility\Mirza Beig\Particle Systems\_Common\Scripts\_Demo\ParticleManager.cs" />
     <Compile Include="Assets\GraphicAssets\VFX Utility\Mirza Beig\Particle Systems\_Common\Scripts\AnimatedLight.cs" />
     <Compile Include="Assets\GraphicAssets\VFX Utility\Mirza Beig\Particle Systems\_Common\Scripts\CameraShake.cs" />
-    <Compile Include="Assets\Scripts\Aestroid.cs" />
-    <Compile Include="Assets\Scripts\AestroidsManager.cs" />
     <Compile Include="Assets\Scripts\Bullet1Script.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Obstacle.cs" />
+    <Compile Include="Assets\Scripts\ObstacleManager.cs" />
     <Compile Include="Assets\Scripts\PowerUp.cs" />
+    <Compile Include="Assets\Scripts\ShieldOffset.cs" />
     <Compile Include="Assets\Scripts\SpaceShipController.cs" />
     <None Include="Assets\GraphicAssets\VFX Utility\Mirza Beig\_DOCS\README - Inferno VFX.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">

@@ -15,11 +15,11 @@ public class GameManager : MonoBehaviour
 
     public GameObject aestroidsType1Obj;
     public GameObject specialAestroid;
+    public GameObject ai_SpaceShip;
 
     public GameObject powerUP1;
     public GameObject powerUP2;
-    public GameObject areaBlastMissile;
-
+    public GameObject powerUP3;
 
     public GameObject aestroidsContainer;
 
@@ -62,13 +62,22 @@ public enum ObstacleType
     SMALL_AESTROID,
     MEDIMAESTROID,
     LARGE_AESTROID,
-    SPECIAL_AESTROID
+    SPECIAL_AESTROID,
+    AI_SPACESHIP
 }
 
 public enum PowerUpType
 {
     NONE,
-    AREABLAST,
+    HEALTH,
     BULLETPOWER,
     SHIELD
+}
+
+public enum LevelManager
+{
+    LEVEL1,
+    LEVEL2,
+    LEVEL3,
+    LEVEL4
 }

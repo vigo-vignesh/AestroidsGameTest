@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -13,12 +14,14 @@ public class SpaceShipController : MonoBehaviour
     private Vector3 target;
 
     public GameObject bulletObject;
+    public GameObject shieldObject;
 
     public Transform[] powerUpBulletPos;
     public PowerUpType _powerUpType;
 
     private void Start()
     {
+        shieldObject.SetActive(false);
         _powerUpType = PowerUpType.NONE;
     }
 
@@ -97,25 +100,42 @@ public class SpaceShipController : MonoBehaviour
                 bulletClone.transform.localScale = new Vector3(0.3f, 0.5f, 1.5f);
                 bulletClone.SetActive(true);
             }
-           
+
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        int playerScore = 0;
-        switch (collision.transform.tag)
+        if (!shieldObject.activeInHierarchy)
         {
-            case "Aestroid":
-                if (_powerUpType != PowerUpType.NONE)
-                {
-                    _powerUpType = PowerUpType.NONE;
-                }
+            int playerScore = 0;
+            switch (collision.transform.tag)
+            {
+                case "Aestroid":
+                    if (_powerUpType != PowerUpType.NONE)
+                    {
+                        _powerUpType = PowerUpType.NONE;
+                    }
 
-                GameManager.Instance.playerHealth = GameManager.Instance.playerHealth - 0.35f;
-                GameManager.Instance.healthBarImage.GetComponent<Image>().fillAmount = GameManager.Instance.playerHealth;
-                if (GameManager.Instance.playerHealth <= 0)
-                {
+
+                    GameManager.Instance.playerHealth = GameManager.Instance.playerHealth - 0.35f;
+                    GameManager.Instance.healthBarImage.GetComponent<Image>().fillAmount = GameManager.Instance.playerHealth;
+                    if (GameManager.Instance.playerHealth <= 0)
+                    {
+                        int.TryParse(GameManager.Instance.playerScore, out playerScore);
+
+                        if (playerScore > GameManager.Instance.highScore)
+                        {
+                            PlayerPrefs.SetInt("Aestroids_HighScore", playerScore);
+                        }
+
+                        SceneManager.LoadScene(0);
+                    }
+
+                    break;
+
+                case "SpecialAestroid":
+
                     int.TryParse(GameManager.Instance.playerScore, out playerScore);
 
                     if (playerScore > GameManager.Instance.highScore)
@@ -124,21 +144,18 @@ public class SpaceShipController : MonoBehaviour
                     }
 
                     SceneManager.LoadScene(0);
-                }
-                break;
-
-            case "SpecialAestroid":
-               
-                int.TryParse(GameManager.Instance.playerScore, out playerScore);
-
-                if (playerScore > GameManager.Instance.highScore)
-                {
-                    PlayerPrefs.SetInt("Aestroids_HighScore", playerScore);
-                }
-
-                SceneManager.LoadScene(0);
-                break;
+                    break;
+            }
         }
+    }
 
+    public void ActivateShield()
+    {
+        shieldObject.SetActive(true);
+        Invoke("DeactivateShield", 5f);
+    }
+    void DeactivateShield()
+    {
+        shieldObject.SetActive(false);
     }
 }
