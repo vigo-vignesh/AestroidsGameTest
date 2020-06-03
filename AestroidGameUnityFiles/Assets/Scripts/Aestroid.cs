@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Aestroid : MonoBehaviour
 {
@@ -8,7 +6,7 @@ public class Aestroid : MonoBehaviour
     public int aestroidScore;
 
     [SerializeField]
-    [Range(10, 50)]
+    [Range(100, 500)]
     private int AestroidSpeed;
     [SerializeField]
     private int randomNumberX;
@@ -17,53 +15,118 @@ public class Aestroid : MonoBehaviour
     [SerializeField]
     private float randomRotationSpeed;
 
+    public ObstacleType _obstacleType;
+    public PowerUpType _powerUpType;
     private void Start()
     {
         randomNumberX = Random.Range(1, 10);
         randomNumberY = Random.Range(-1f, 1f);
         randomRotationSpeed = Random.Range(-50f, 50f);
-        DestroyThisAestroid();
-    }
-    private void FixedUpdate()
-    {
-        transform.Rotate(new Vector3(1f, randomNumberY, 0f) * randomRotationSpeed * Time.deltaTime, Space.Self);
-
-        if (randomNumberX % 2 == 0)
+        if (_obstacleType != ObstacleType.SPECIAL_AESTROID)
         {
-            transform.GetComponent<Rigidbody>().velocity = (new Vector3(1f, randomNumberY, 0) * AestroidSpeed * 10f * Time.deltaTime);
+            Destroy(gameObject, 10f);
         }
         else
         {
-            transform.GetComponent<Rigidbody>().velocity = (new Vector3(-1f, randomNumberY, 0) * AestroidSpeed * 10f * Time.deltaTime );
+            iTween.MoveTo(gameObject, GameManager.Instance.currentPlayerObject.transform.position, 8f);
         }
+    }
+    private void FixedUpdate()
+    {
+        switch (_obstacleType)
+        {
+            case ObstacleType.SPECIAL_AESTROID:
 
+                break;
 
-        //if (randomNumberX % 2 == 0)
-        //{
-        //    transform.GetComponent<Rigidbody>().AddForce(new Vector3(1f, randomNumberY, 0) * AestroidSpeed);
-        //}
-        //else
-        //{
-        //    transform.GetComponent<Rigidbody>().AddForce(new Vector3(-1f, randomNumberY, 0) * AestroidSpeed);
-        //}
+            default:
+                transform.Rotate(new Vector3(0, 0, randomNumberX) * randomRotationSpeed * Time.deltaTime, Space.Self);
 
-        //if (randomNumberX % 2 == 0)
-        //{
-        //    transform.Translate(new Vector3(1f, randomNumberY, 0f) * Time.deltaTime* AestroidSpeed, Space.Self);
-        //}
-        //else
-        //{
-        //    transform.Translate(new Vector3(-1f, randomNumberY, 0f) * Time.deltaTime* AestroidSpeed, Space.Self);
-        //}
-
-
+                if (randomNumberX % 2 == 0)
+                {
+                    transform.GetComponent<Rigidbody>().velocity = (new Vector3(1f, randomNumberY, 0) * AestroidSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    transform.GetComponent<Rigidbody>().velocity = (new Vector3(-1f, randomNumberY, 0) * AestroidSpeed * Time.deltaTime);
+                }
+                break;
+        }
 
         CheckPosition();
     }
-    void DestroyThisAestroid()
+
+    private void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject, 10f);
+        switch (collision.transform.tag)
+        {
+            case "Bullet":
+                aestroidPower = aestroidPower - collision.transform.GetComponent<Bullet1Script>().bulletPower;
+                Destroy(collision.transform.gameObject);
+                if (aestroidPower <= 0)
+                {
+                    int currentScore = 0;
+                    int.TryParse(GameManager.Instance.playerScore, out currentScore);
+                    currentScore = currentScore + aestroidScore;
+                    GameManager.Instance.playerScore = currentScore.ToString();
+                    DestroyCurrentAestroid();
+                }
+                break;
+
+            case "Player":
+                DestroyCurrentAestroid();
+                break;
+        }
+
     }
+
+    public void DestroyCurrentAestroid()
+    {
+        if (_powerUpType == PowerUpType.AREABLAST)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            if (_obstacleType == ObstacleType.SPECIAL_AESTROID)
+            {
+                int randomNumber = 0;
+                randomNumber = Random.Range(0, 10);
+
+               // randomNumber = 9;
+                if (randomNumber > 8)
+                {
+                    randomNumber = Random.Range(0, 10);
+                    GameObject poewerUpClone = null;
+                    if (randomNumber % 2 == 0)
+                    {
+                       
+                        poewerUpClone = Instantiate(GameManager.Instance.powerUP1, transform.position, GameManager.Instance.powerUP1.transform.rotation) as GameObject;
+                        poewerUpClone.transform.GetComponent<PowerUp>()._powerUpType = PowerUpType.BULLETPOWER;
+                        poewerUpClone.SetActive(true);
+                    }
+                    else
+                    {
+                        if (randomNumber > 8)
+                        {
+                            poewerUpClone = Instantiate(GameManager.Instance.powerUP2, transform.position, GameManager.Instance.powerUP1.transform.rotation) as GameObject;
+                            poewerUpClone.transform.GetComponent<PowerUp>()._powerUpType = PowerUpType.AREABLAST;
+                            poewerUpClone.SetActive(true);
+                        }
+                        else
+                        {
+                            poewerUpClone = Instantiate(GameManager.Instance.powerUP2, transform.position, GameManager.Instance.powerUP1.transform.rotation) as GameObject;
+                            poewerUpClone.transform.GetComponent<PowerUp>()._powerUpType = PowerUpType.SHIELD;
+                            poewerUpClone.SetActive(true);
+                        }
+                    }
+                    Destroy(poewerUpClone.gameObject, 3f);
+                }
+            }
+            Destroy(this.gameObject);
+        }
+    }
+
     private void CheckPosition()
     {
         float sceneWidth = Camera.main.orthographicSize * 2 * Camera.main.aspect;
@@ -91,28 +154,6 @@ public class Aestroid : MonoBehaviour
             transform.position = new Vector2(transform.position.x, sceneTopEdge);
         }
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision.transform.name);
-        switch (collision.transform.tag)
-        {
-            case "Bullet":
-                aestroidPower = aestroidPower - collision.transform.GetComponent<Bullet1Script>().bulletPower;
-                Destroy(collision.transform.gameObject);
-                if (aestroidPower <= 0)
-                {
-                    int currentScore = 0;
-                    int.TryParse(GameManager.Instance.playerScore, out currentScore);
-                    currentScore = currentScore + aestroidScore;
-                    GameManager.Instance.playerScore = currentScore.ToString();
-                }
-                break;
-
-            case "Player":
-                Destroy(this.gameObject);
-                break;
-        }
-        
-    }
 }
+
+

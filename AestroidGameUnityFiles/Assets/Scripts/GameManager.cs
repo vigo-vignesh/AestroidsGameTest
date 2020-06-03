@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject currentPlayerObject;
+
     public string playerScore = "0";
     public Text scoreText;
 
@@ -10,6 +12,16 @@ public class GameManager : MonoBehaviour
     public Image healthBarImage;
 
     public int highScore;
+
+    public GameObject aestroidsType1Obj;
+    public GameObject specialAestroid;
+
+    public GameObject powerUP1;
+    public GameObject powerUP2;
+    public GameObject areaBlastMissile;
+
+
+    public GameObject aestroidsContainer;
 
     public static GameManager _instance;
     public static GameManager Instance
@@ -43,4 +55,20 @@ public class GameManager : MonoBehaviour
             scoreText.text = playerScore;
         }
     }
+}
+
+public enum ObstacleType
+{
+    SMALL_AESTROID,
+    MEDIMAESTROID,
+    LARGE_AESTROID,
+    SPECIAL_AESTROID
+}
+
+public enum PowerUpType
+{
+    NONE,
+    AREABLAST,
+    BULLETPOWER,
+    SHIELD
 }

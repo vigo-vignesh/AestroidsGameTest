@@ -59,10 +59,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aestroidPower: 10
-  AestroidSpeed: 50
+  aestroidScore: 0
+  AestroidSpeed: 300
   randomNumberX: 0
   randomNumberY: 0
   randomRotationSpeed: 0
+  _obstacleType: 0
 --- !u!54 &237331217
 Rigidbody:
   m_ObjectHideFlags: 0

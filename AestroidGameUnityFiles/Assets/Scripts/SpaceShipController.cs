@@ -7,12 +7,20 @@ public class SpaceShipController : MonoBehaviour
     public Rigidbody playerRigidBody;
     private float verticalInput;
 
-    [Range(10f, 25f)]
+    [Range(10f, 250f)]
     public float playerSpeed;
 
     private Vector3 target;
 
     public GameObject bulletObject;
+
+    public Transform[] powerUpBulletPos;
+    public PowerUpType _powerUpType;
+
+    private void Start()
+    {
+        _powerUpType = PowerUpType.NONE;
+    }
 
     private void Update()
     {
@@ -40,6 +48,8 @@ public class SpaceShipController : MonoBehaviour
         if (verticalInput > 0)
         {
             playerRigidBody.AddForce(new Vector3(target.x, target.y, 0) * playerSpeed);
+
+            //playerRigidBody.velocity = (new Vector3(target.x, target.y, 0) * playerSpeed * Time.deltaTime);
         }
     }
 
@@ -73,20 +83,52 @@ public class SpaceShipController : MonoBehaviour
 
     void BulletFire()
     {
-        GameObject bulletClone = Instantiate(bulletObject, new Vector3(bulletObject.transform.position.x, bulletObject.transform.position.y, 0f), bulletObject.transform.rotation);
-        bulletClone.transform.localScale = new Vector3(0.3f, 0.5f, 1.5f);
-        bulletClone.SetActive(true);
+        if (_powerUpType != PowerUpType.BULLETPOWER)
+        {
+            GameObject bulletClone = Instantiate(bulletObject, new Vector3(bulletObject.transform.position.x, bulletObject.transform.position.y, 0f), bulletObject.transform.rotation);
+            bulletClone.transform.localScale = new Vector3(0.3f, 0.5f, 1.5f);
+            bulletClone.SetActive(true);
+        }
+        else
+        {
+            for (int i = 0; i < powerUpBulletPos.Length; i++)
+            {
+                GameObject bulletClone = Instantiate(bulletObject, new Vector3(powerUpBulletPos[i].transform.position.x, powerUpBulletPos[i].transform.position.y, 0f), bulletObject.transform.rotation);
+                bulletClone.transform.localScale = new Vector3(0.3f, 0.5f, 1.5f);
+                bulletClone.SetActive(true);
+            }
+           
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.tag == "Aestroid")
+        int playerScore = 0;
+        switch (collision.transform.tag)
         {
-            GameManager.Instance.playerHealth = GameManager.Instance.playerHealth - 0.25f;
-            GameManager.Instance.healthBarImage.GetComponent<Image>().fillAmount = GameManager.Instance.playerHealth;
-            if (GameManager.Instance.playerHealth <= 0)
-            {
-                int playerScore = 0;
+            case "Aestroid":
+                if (_powerUpType != PowerUpType.NONE)
+                {
+                    _powerUpType = PowerUpType.NONE;
+                }
+
+                GameManager.Instance.playerHealth = GameManager.Instance.playerHealth - 0.35f;
+                GameManager.Instance.healthBarImage.GetComponent<Image>().fillAmount = GameManager.Instance.playerHealth;
+                if (GameManager.Instance.playerHealth <= 0)
+                {
+                    int.TryParse(GameManager.Instance.playerScore, out playerScore);
+
+                    if (playerScore > GameManager.Instance.highScore)
+                    {
+                        PlayerPrefs.SetInt("Aestroids_HighScore", playerScore);
+                    }
+
+                    SceneManager.LoadScene(0);
+                }
+                break;
+
+            case "SpecialAestroid":
+               
                 int.TryParse(GameManager.Instance.playerScore, out playerScore);
 
                 if (playerScore > GameManager.Instance.highScore)
@@ -95,7 +137,8 @@ public class SpaceShipController : MonoBehaviour
                 }
 
                 SceneManager.LoadScene(0);
-            }
+                break;
         }
+
     }
 }

@@ -20,9 +20,4 @@ public class Bullet1Script : MonoBehaviour
     {
         transform.Translate(Vector3.up * Time.deltaTime * bulletSpeed);
     }
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    Debug.Log(collision.transform.name);
-    //}
 }
