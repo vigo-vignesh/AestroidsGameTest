@@ -9,6 +9,7 @@ TagManager:
   - SpecialAestroid
   - PowerUp
   - AISpaceShip
+  - AIBullet
   layers:
   - Default
   - TransparentFX

@@ -24,11 +24,15 @@ public class ObstacleManager : MonoBehaviour
             case int n when (n >= 0 && n <= 100):
                 _levelManager = LevelManager.LEVEL1;
                 GenerateAestroids(2, 0.8f);
+
+                GenerateSpecialAestroids();
                 break;
 
             case int n when (n >= 101 && n <= 200):
                 _levelManager = LevelManager.LEVEL2;
                 GenerateAestroids(3, 0.8f);
+
+                GenerateSpecialAestroids();
                 break;
 
             case int n when (n > 201 && n < 300):
@@ -70,10 +74,9 @@ public class ObstacleManager : MonoBehaviour
     {
         int randomNumber = 0;
         randomNumber = Random.Range(1, 10);
+
         if (randomNumber >= 7)
         {
-            GameManager specialObjectToGenerate = null;
-
             if (randomNumber % 2 == 0)
             {
                 sideBoundaryValue = -sideBoundaryValue;
@@ -94,12 +97,6 @@ public class ObstacleManager : MonoBehaviour
                 specialObject.GetComponent<Obstacle>()._obstacleType = ObstacleType.SPECIAL_AESTROID;
                 specialObject.SetActive(true);
             }
-
-
-
-
-
-
         }
     }
 

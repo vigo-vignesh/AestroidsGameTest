@@ -3,13 +3,19 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject menuPanelObject;
+    public GameObject gameplayPanelObject;
+
     public GameObject currentPlayerObject;
 
     public string playerScore = "0";
     public Text scoreText;
 
+    public Text highScoreText;
+
     public float playerHealth = 1;
     public Image healthBarImage;
+    public GameObject spaceShipHitWarning;
 
     public int highScore;
 
@@ -46,6 +52,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         highScore = PlayerPrefs.GetInt("Aestroids_HighScore");
+
+        highScoreText.text = highScore.ToString();
     }
 
     private void Update()
@@ -54,6 +62,12 @@ public class GameManager : MonoBehaviour
         {
             scoreText.text = playerScore;
         }
+    }
+
+    public void LoadGame()
+    {
+        menuPanelObject.SetActive(false);
+        gameplayPanelObject.SetActive(true);
     }
 }
 

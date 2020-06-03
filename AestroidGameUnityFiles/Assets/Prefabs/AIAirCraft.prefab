@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &185391469
 Transform:
   m_ObjectHideFlags: 0
@@ -47,11 +47,11 @@ GameObject:
   - component: {fileID: 1815840755}
   m_Layer: 0
   m_Name: Bullet1
-  m_TagString: Bullet
+  m_TagString: AIBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1815840754
 Transform:
   m_ObjectHideFlags: 0
@@ -166,13 +166,14 @@ GameObject:
   - component: {fileID: 881889623230919935}
   - component: {fileID: 1165266839}
   - component: {fileID: 1165266838}
+  - component: {fileID: 5242203314006983731}
   m_Layer: 0
   m_Name: AIAirCraft
   m_TagString: AISpaceShip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &881889623230919935
 Transform:
   m_ObjectHideFlags: 0
@@ -226,6 +227,19 @@ MonoBehaviour:
   randomRotationSpeed: 0
   _obstacleType: 4
   _powerUpType: 0
+--- !u!65 &5242203314006983731
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881889623230919934}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.8115463, y: 1.5695657, z: 1.6346928}
+  m_Center: {x: 0.29008865, y: 0.009546816, z: 0.0053787827}
 --- !u!1001 &881889624251006425
 PrefabInstance:
   m_ObjectHideFlags: 0

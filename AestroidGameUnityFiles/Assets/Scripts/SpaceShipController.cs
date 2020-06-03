@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class SpaceShipController : MonoBehaviour
 {
+
     public Rigidbody playerRigidBody;
     private float verticalInput;
 
@@ -21,6 +22,7 @@ public class SpaceShipController : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.spaceShipHitWarning.SetActive(false);
         shieldObject.SetActive(false);
         _powerUpType = PowerUpType.NONE;
     }
@@ -117,6 +119,7 @@ public class SpaceShipController : MonoBehaviour
                         _powerUpType = PowerUpType.NONE;
                     }
 
+                    StartCoroutine(ShowWarningImage());
 
                     GameManager.Instance.playerHealth = GameManager.Instance.playerHealth - 0.35f;
                     GameManager.Instance.healthBarImage.GetComponent<Image>().fillAmount = GameManager.Instance.playerHealth;
@@ -145,8 +148,40 @@ public class SpaceShipController : MonoBehaviour
 
                     SceneManager.LoadScene(0);
                     break;
+
+                case "AIBullet":
+                    if (_powerUpType != PowerUpType.NONE)
+                    {
+                        _powerUpType = PowerUpType.NONE;
+                    }
+
+                    StartCoroutine(ShowWarningImage());
+
+                    GameManager.Instance.playerHealth = GameManager.Instance.playerHealth - 0.35f;
+                    GameManager.Instance.healthBarImage.GetComponent<Image>().fillAmount = GameManager.Instance.playerHealth;
+                    if (GameManager.Instance.playerHealth <= 0)
+                    {
+                        int.TryParse(GameManager.Instance.playerScore, out playerScore);
+
+                        if (playerScore > GameManager.Instance.highScore)
+                        {
+                            PlayerPrefs.SetInt("Aestroids_HighScore", playerScore);
+                        }
+
+                        SceneManager.LoadScene(0);
+                    }
+                    break;
+
+
             }
         }
+    }
+
+    IEnumerator ShowWarningImage()
+    {
+        GameManager.Instance.spaceShipHitWarning.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        GameManager.Instance.spaceShipHitWarning.SetActive(false);
     }
 
     public void ActivateShield()

@@ -34,9 +34,9 @@ public class Obstacle : MonoBehaviour
             // iTween.MoveTo(gameObject, GameManager.Instance.currentPlayerObject.transform.position, 8f);
         }
 
-        if (_obstacleType != ObstacleType.AI_SPACESHIP)
+        if (_obstacleType == ObstacleType.AI_SPACESHIP)
         {
-            InvokeRepeating("fireBulletAISpaceShip", 0, 1f);
+            InvokeRepeating("fireBulletAISpaceShip", 0, .3f);
         }
     }
 
@@ -56,7 +56,7 @@ public class Obstacle : MonoBehaviour
                 break;
 
             case ObstacleType.SPECIAL_AESTROID:
-                transform.position = Vector3.Lerp(transform.position, GameManager.Instance.currentPlayerObject.transform.position, Time.deltaTime * 0.5f);
+                transform.position = Vector3.Lerp(transform.position, GameManager.Instance.currentPlayerObject.transform.position, Time.deltaTime * 0.7f);
 
                 break;
 
@@ -96,6 +96,14 @@ public class Obstacle : MonoBehaviour
 
             case "Player":
                 DestroyCurrentAestroid();
+                break;
+
+            case "Aestroid":
+                if (_obstacleType == ObstacleType.AI_SPACESHIP)
+                {
+                    Destroy(collision.transform.gameObject);
+                }
+                else { DestroyCurrentAestroid(); }
                 break;
         }
 
@@ -159,7 +167,7 @@ public class Obstacle : MonoBehaviour
     {
         for (int i = 0; i < countToGenerate; i++)
         {
-            float randomScale = Random.RandomRange(0.5f, 0.8f);
+            float randomScale = Random.Range(0.5f, 0.8f);
             GameObject aestroidClone = Instantiate(GameManager.Instance.aestroidsType1Obj, new Vector3(transform.position.x, transform.position.y, 0f), GameManager.Instance.aestroidsType1Obj.transform.rotation) as GameObject;
             aestroidClone.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
             aestroidClone.GetComponent<Obstacle>()._obstacleType = ObstacleType.SMALL_AESTROID;
